@@ -21,13 +21,13 @@ retval, im_at_fixed = cv2.threshold(img, 50, 255, cv2.THRESH_BINARY)
 
 print(img.shape)
 print("done")
-cv2.imshow("gray", img)
+cv2.imwrite("./gray.jpg", img)
 cv2.imshow("01", im_at_fixed)
 print("done")
 img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
 
 # im_at_mean = cv2.adaptiveThreshold(img2, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 5, 7)
-cv2.imshow("sd", img2)
+cv2.imwrite("./sd.jpg", img2)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 

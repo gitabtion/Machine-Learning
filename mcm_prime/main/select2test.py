@@ -3,10 +3,10 @@ import random
 
 import shutil
 
-boat_train_patches_path = "../data/train/patches/boat/"
-water_train_patches_path = "../data/train/patches/water/"
-boat_test_patches_path = "../data/test/boat/"
-water_test_patches_path = "../data/test/water/"
+boat_train_patches_path = "../../../mcm_prime/data/train/patches/boat/"
+water_train_patches_path = "../../../mcm_prime/data/train/patches/water/"
+boat_test_patches_path = "../../../mcm_prime/data/test/boat/"
+water_test_patches_path = "../../../mcm_prime/data/test/water/"
 boat_train_files = os.listdir(boat_train_patches_path)
 boat_test_files = os.listdir(boat_test_patches_path)
 water_train_files = os.listdir(water_train_patches_path)

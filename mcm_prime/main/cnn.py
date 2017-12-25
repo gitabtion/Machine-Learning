@@ -3,10 +3,10 @@ import numpy as np
 import cv2
 import os
 
-boat_train_patches_path = "../data/train/patches/boat/"
-water_train_patches_path = "../data/train/patches/water/"
-boat_test_patches_path = "../data/test/boat/"
-water_test_patches_path = "../data/test/water/"
+boat_train_patches_path = "../../../mcm_prime/data/train/patches/boat/"
+water_train_patches_path = "../../../mcm_prime/data/train/patches/water/"
+boat_test_patches_path = "../../../mcm_prime/data/test/boat/"
+water_test_patches_path = "../../../mcm_prime/data/test/water/"
 boat_train_files = os.listdir(boat_train_patches_path)
 boat_test_files = os.listdir(boat_test_patches_path)
 water_train_files = os.listdir(water_train_patches_path)
@@ -24,7 +24,7 @@ n_outputs = pic_class
 n_filters_conv1 = 32
 n_filters_conv2 = 64
 n_inputs_full1 = 7 * 7 * n_filters_conv2
-n_neurons_full1 = 96
+n_neurons_full1 = 1024
 n_inputs_full2 = n_neurons_full1
 n_neurons_full2 = n_outputs
 
@@ -98,6 +98,9 @@ pool_flat_conv2 = tf.reshape(pool_conv2, [-1, n_inputs_full1])
 # 第一次全连接层
 W_full1 = weight([n_inputs_full1, n_neurons_full1])
 b_full1 = bias([n_neurons_full1])
+
+print(pool_flat_conv2.shape)
+print(W_full1.shape)
 # 加法
 sigma_full1 = tf.matmul(pool_flat_conv2, W_full1) + b_full1
 
@@ -139,8 +142,8 @@ init = tf.global_variables_initializer()
 saver = tf.train.Saver()
 with tf.Session(config=config) as sess:
     writer = tf.summary.FileWriter("logs/", sess.graph)
-    # sess.run(init)
-    saver.restore(sess,"./mcm_prime.ckpt")
+    sess.run(init)
+    # saver.restore(sess, "./mcm_prime.ckpt")
     # 迭代训练
     for epoch in range(n_epochs):
 

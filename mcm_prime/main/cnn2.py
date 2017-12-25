@@ -3,10 +3,10 @@ import numpy as np
 import cv2
 import os
 
-boat_train_patches_path = "../data/train/patches/boat/"
-water_train_patches_path = "../data/train/patches/water/"
-boat_test_patches_path = "../data/test/boat/"
-water_test_patches_path = "../data/test/water/"
+boat_train_patches_path = "../../../mcm_prime/data/train/patches/boat/"
+water_train_patches_path = "../../../mcm_prime/data/train/patches/water/"
+boat_test_patches_path = "../../../mcm_prime/data/test/boat/"
+water_test_patches_path = "../../../mcm_prime/data/test/water/"
 boat_train_files = os.listdir(boat_train_patches_path)
 boat_test_files = os.listdir(boat_test_patches_path)
 water_train_files = os.listdir(water_train_patches_path)
@@ -59,7 +59,7 @@ def max_poo_2x2(x):
 
 xs = tf.placeholder(tf.float32, [pic_height, pic_width, n_channels])
 ys = tf.placeholder(tf.float32, [pic_class])
-keep_prob = tf.placeholder(tf.float32)
+# keep_prob = tf.placeholder(tf.float32)
 
 x_image = tf.reshape(xs, [-1, pic_height, pic_width, n_channels])
 
@@ -80,12 +80,15 @@ h_pool2_flat = tf.reshape(h_pool2, [-1, n_inputs_full1])
 
 W_fc1 = weight_variable([n_inputs_full1, n_neurons_full1])
 b_fc1 = bias_varibale([n_neurons_full1])
-h_fc1 = tf.nn.relu(conv2d(h_pool2_flat, W_fc1) + b_fc1)
-h_fc1_dropt = tf.nn.dropout(h_fc1, keep_prob)
+
+h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
+# h_fc1_dropt = tf.nn.dropout(h_fc1, keep_prob)
 
 W_fc2 = weight_variable([n_inputs_full2, n_neurons_full2])
 b_fc2 = bias_varibale([n_neurons_full2])
-prediction = tf.nn.softmax(tf.matmul(h_fc1_dropt, W_fc2), b_fc2)
+
+
+prediction = tf.nn.softmax(tf.matmul(h_fc1, W_fc2) + b_fc2)
 
 # 损失函数
 # 交叉熵损失
@@ -97,7 +100,7 @@ optimizer = tf.train.AdamOptimizer(1e-4)
 train_op = optimizer.minimize(loss)
 
 # 测试指标
-correct_predtion = tf.equal(tf.argmax(y, 1), tf.argmax(prediction, 1))
+correct_predtion = tf.equal(tf.argmax(ys, 0), tf.argmax(prediction, 0))
 accuracy = tf.reduce_mean(tf.cast(correct_predtion, tf.float32))
 
 with tf.Session() as sess:
