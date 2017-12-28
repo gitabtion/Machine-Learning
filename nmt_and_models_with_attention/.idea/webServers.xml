@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="646849bd-81e2-475f-abce-06b08cb459a4" name="318" url="http://172.16.15.56">
-        <fileTransfer host="172.16.15.56" port="22" rootFolder="/home/stu02/perl5/mlpractice/nmt7" accessType="SFTP">
+        <fileTransfer host="172.16.15.56" port="22" rootFolder="/home/stu02/perl5/mlpractice/" accessType="SFTP">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" />
           </advancedOptions>
