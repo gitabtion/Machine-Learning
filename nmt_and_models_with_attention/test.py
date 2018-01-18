@@ -19,34 +19,30 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
 random.seed(1024)
-# %matplotlib inline
-
 
 # USE_CUDA = torch.cuda.is_available()
 USE_CUDA = False
 # gpus = [1]
 # torch.cuda.set_device(gpus[0])
-
 # FloatTensor = torch.cuda.FloatTensor if USE_CUDA else torch.FloatTensor
 # LongTensor = torch.cuda.LongTensor if USE_CUDA else torch.LongTensor
 # ByteTensor = torch.cuda.ByteTensor if USE_CUDA else torch.ByteTensor
 
 
 FloatTensor = torch.FloatTensor
-LongTensor =  torch.LongTensor
-ByteTensor =  torch.ByteTensor
-
+LongTensor = torch.LongTensor
+ByteTensor = torch.ByteTensor
 
 
 def getBatch(batch_size, train_data):
+    # 将训练数据随机排序
     random.shuffle(train_data)
     sindex = 0
     eindex = batch_size
     while eindex < len(train_data):
         batch = train_data[sindex: eindex]
-        temp = eindex
+        sindex = eindex
         eindex = eindex + batch_size
-        sindex = temp
         yield batch
 
     if eindex >= len(train_data):
@@ -78,6 +74,8 @@ def pad_to_batch(batch, x_to_ix, y_to_ix):
     input_len = [list(map(lambda s: s == 0, t.data)).count(False) for t in input_var]
     target_len = [list(map(lambda s: s == 0, t.data)).count(False) for t in target_var]
 
+    print(input_var)
+    print(target_var)
     return input_var, target_var, input_len, target_len
 
 
@@ -100,6 +98,7 @@ def normalize_string(s):
     s = re.sub(r"([,.!?])", r" \1 ", s)
     s = re.sub(r"[^a-zA-Z,.!?]+", r" ", s)
     s = re.sub(r"\s+", r" ", s).strip()
+
     return s
 
 
@@ -148,6 +147,7 @@ index2target = {v: k for k, v in target2index.items()}
 
 X_p, y_p = [], []
 
+# 将句子转化为字典的index
 for so, ta in zip(X_r, y_r):
     X_p.append(prepare_sequence(so + ['</s>'], source2index).view(1, -1))
     y_p.append(prepare_sequence(ta + ['</s>'], target2index).view(1, -1))
@@ -323,7 +323,7 @@ LR = 0.001
 DECODER_LEARNING_RATIO = 5.0
 RESCHEDULED = False
 
-encoder = Encoder(len(source2index), EMBEDDING_SIZE, HIDDEN_SIZE, 3, True)
+encoder = Encoder(len(source2index), EMBEDDING_SIZE, HIDDEN_SIZE, 4, True)
 decoder = Decoder(len(target2index), EMBEDDING_SIZE, HIDDEN_SIZE * 2)
 encoder.init_weight()
 decoder.init_weight()
@@ -347,6 +347,8 @@ for epoch in range(EPOCH):
         input_masks = torch.cat([Variable(ByteTensor(tuple(map(lambda s: s == 0, t.data)))) for t in inputs]).view(
             inputs.size(0), -1)
         start_decode = Variable(LongTensor([[target2index['<s>']] * targets.size(0)])).transpose(0, 1)
+
+        # 将参数的梯度缓冲器归0
         encoder.zero_grad()
         decoder.zero_grad()
         output, hidden_c = encoder(inputs, input_lengths)
@@ -367,14 +369,12 @@ for epoch in range(EPOCH):
             losses = []
 
     # You can use http://pytorch.org/docs/master/optim.html#how-to-adjust-learning-rate
-    if RESCHEDULED == False and epoch == EPOCH // 2:
+    if RESCHEDULED is False and epoch == EPOCH // 2:
         LR *= 0.01
         enc_optimizer = optim.Adam(encoder.parameters(), lr=LR)
         dec_optimizer = optim.Adam(decoder.parameters(), lr=LR * DECODER_LEARNING_RATIO)
         RESCHEDULED = True
 
-
-# borrowed code from https://github.com/spro/practical-pytorch/blob/master/seq2seq-translation/seq2seq-translation-batched.ipynb
 
 def show_attention(input_words, output_words, attentions):
     # Set up figure with colorbar
