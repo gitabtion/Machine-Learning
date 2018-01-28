@@ -3,8 +3,7 @@ from torch.autograd import Variable
 import torch.nn as nn
 import matplotlib.pyplot as plt
 import numpy as np
-
-np.random.seed(1024)
+import random
 
 fig = plt.figure()
 ax = fig.add_subplot(111)
@@ -20,6 +19,19 @@ y = torch.cat((y0, y1), ).type(torch.LongTensor)
 
 x = torch.unsqueeze(x, 1)
 
+print(x, y)
+x = x.numpy()
+y = y.numpy()
+
+# todo 数据的随机排列
+# random.seed(102456)
+# random.shuffle(x)
+# random.shuffle(y)
+
+x = torch.FloatTensor(x)
+
+y = torch.LongTensor(y)
+
 x = Variable(x)
 y = Variable(y)
 
@@ -33,10 +45,14 @@ else:
 loss_func = nn.CrossEntropyLoss()
 print(model)
 
+print(x)
+print(y)
 out = model(x)
 loss = loss_func(out, y)
 print(loss)
 print(out)
+print(x)
+print(y)
 
 ax.plot(out.data.numpy())
 
