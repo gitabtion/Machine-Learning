@@ -25,6 +25,7 @@ if torch.cuda.is_available():
 optimizer = torch.optim.SGD(model.parameters(), lr=0.02)
 loss_func = nn.CrossEntropyLoss()
 print(model)
+print(x.shape)
 for t in range(10000):
     out = model(x)
     loss = loss_func(out, y)

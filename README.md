@@ -4,3 +4,4 @@ Machine learning algorithm exercises.
 - [x] mlp
 - [x] cnn 
 - [ ] vgg
+- [ ] DeconvNet
