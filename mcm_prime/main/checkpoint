@@ -1,2 +1,0 @@
-model_checkpoint_path: "mcm_prime.ckpt"
-all_model_checkpoint_paths: "mcm_prime.ckpt"

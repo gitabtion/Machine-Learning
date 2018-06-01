@@ -1,7 +1,7 @@
-# machine_learning_practice
-Machine learning algorithm exercises.
+# Machine_Learning
+code of some machine learning algorithm and deep learning models in Python & JupyterNotebook. 
 
-- [x] mlp
-- [x] cnn 
-- [ ] vgg
+- [x] MLP
+- [x] CNN 
+- [ ] VGG
 - [ ] DeconvNet
