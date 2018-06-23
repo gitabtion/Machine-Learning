@@ -3,7 +3,7 @@ import numpy as np
 
 from tensorflow.examples.tutorials.mnist import input_data
 
-mnist = input_data.read_data_sets("./mnist_data/", one_hot=True)
+mnist = input_data.read_data_sets("/Users/abtion/workspace/dataset/mnist", one_hot=True)
 
 pic_height = 28
 pic_width = 28
@@ -76,7 +76,8 @@ pool_conv1 = max_pool_2x2(relu_conv1)
 # 第二层卷积神经网络的权值和偏置值
 W_conv2 = weight([filter_height, filter_width, n_filters_conv1, n_filters_conv2])
 b_conv2 = bias([n_filters_conv2])
-
+print(W_conv2.shape)
+print(b_conv2.shape)
 # 卷积
 sigma_conv2 = conv2d(pool_conv1, W_conv2) + b_conv2
 # 非线性变换
@@ -138,7 +139,8 @@ with tf.Session() as sess:
             x_batch, y_batch = mnist.train.next_batch(batch_size)
             _, acc = sess.run([train_op, accuracy], feed_dict={x: x_batch, y: y_batch})
             train_acc += acc
-
+            if batch%10 ==0:
+                print('step: {}, acc:{}'.format(batch, acc))
         train_acc /= n_train_batches
 
         for batch in range(n_test_batches):
